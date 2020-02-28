@@ -1,7 +1,7 @@
 FROM debian:stable-slim
 
 # expose samba ports 
-EXPOSE 137/udp 139/udp 139 445 
+EXPOSE 139 445 
 
 # set volume 
 VOLUME /samba 

@@ -1,18 +1,23 @@
 version: '3.7'
 services: 
-        samba_server:
-                build: .        
+        samba:
+                build:         
+                        context: .
+                        dockerfile: Dockerfile.samba
                 ports :
-                        - "137:137/udp"
-                        - "138:138/udp"
                         - "139:139"
                         - "445:445"
                 volumes:
-                        - type: volume
-                          source: samba
-                          target: /samba
-                container_name: samba-server
-
-volumes:
-        samba:
-                        
+                        - "/mnt/samba:/samba"
+                container_name: samba_server
+        dlna:
+                build: 
+                        context: .
+                        dockerfile: Dockerfile.dlna
+                ports: 
+                        - "1900:1900/udp"
+                        - "8200:8200"
+                volumes:
+                        - "/mnt/samba:/samba"
+                container_name: dlna_server
+                network_mode: host

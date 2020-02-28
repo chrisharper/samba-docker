@@ -1,0 +1,16 @@
+FROM debian:stable-slim
+
+# expose samba ports 
+EXPOSE 8200
+
+# set volume 
+VOLUME /samba 
+RUN chmod 755 /samba 
+
+#update and install samba
+RUN apt-get update && apt-get install -y sysvinit-core minidlna
+
+COPY minidlna.conf /etc/minidlna.conf
+
+
+ENTRYPOINT ["/sbin/init"]
