@@ -1,0 +1,27 @@
+#!/bin/bash
+
+#exec 2> /dev/null
+
+
+upload_folder='/samba/upload'
+photos_folder='/samba/photos'
+videos_folder='/samba/videos'
+
+cd $upload_folder
+
+mv *.mov "$videos_folder"
+mv *.MOV "$videos_folder"
+
+for filename in *
+do
+	if exif_date=$(identify -format "%[EXIF:DateTimeOriginal]" "$filename"); then
+		if [[ $exif_date =~ ^[0-9]{4} ]]; then 
+			folder_location=$(echo $exif_date | awk '{split($0,datetime,":"); printf("'$photos_folder'/%d/%d\n",datetime[1],datetime[2])}')
+			mkdir -p "$folder_location"	 
+			mv "$filename" "$folder_location"
+
+		fi
+	fi
+
+done
+
