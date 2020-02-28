@@ -14,9 +14,6 @@ services:
                 build: 
                         context: .
                         dockerfile: Dockerfile.dlna
-                ports: 
-                        - "1900:1900/udp"
-                        - "8200:8200"
                 volumes:
                         - "/mnt/samba:/samba"
                 container_name: dlna_server

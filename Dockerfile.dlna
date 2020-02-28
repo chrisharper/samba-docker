@@ -1,7 +1,7 @@
 FROM debian:stable-slim
 
 # expose samba ports 
-EXPOSE 8200
+EXPOSE 1900/udp 8200
 
 # set volume 
 VOLUME /samba 
