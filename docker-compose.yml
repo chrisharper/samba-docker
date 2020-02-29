@@ -1,6 +1,7 @@
 version: '3.7'
 services: 
         samba:
+                restart: always
                 build:         
                         context: .
                         dockerfile: Dockerfile.samba
@@ -11,6 +12,7 @@ services:
                         - "/mnt/samba:/samba"
                 container_name: samba_server
         dlna:
+                restart: always
                 build: 
                         context: .
                         dockerfile: Dockerfile.dlna
