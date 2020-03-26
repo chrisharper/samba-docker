@@ -20,3 +20,16 @@ services:
                         - "/mnt/samba:/samba"
                 container_name: dlna_server
                 network_mode: host
+        print:
+                restart: always
+                build: 
+                        context: .
+                        dockerfile: Dockerfile.print
+                volumes:
+                        - "/var/run/dbus:/var/run/dbus"
+                container_name: print_server
+                network_mode: host
+                volumes:
+                        - "/dev/bus/usb:/dev/bus/usb"
+                devices:
+                        - "/dev/brother-printer:/dev/brother-printer"
