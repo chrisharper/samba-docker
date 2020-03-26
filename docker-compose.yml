@@ -1,4 +1,6 @@
-version: '3.7'
+# 2.4 due to device_cgroup_rules being remove from later schema
+#https://github.com/docker/compose/pull/6974
+version: '2.4'
 services: 
         samba:
                 restart: always
@@ -29,7 +31,8 @@ services:
                         - "/var/run/dbus:/var/run/dbus"
                 container_name: print_server
                 network_mode: host
+                #rules allow access to shared usb devices 
+                device_cgroup_rules:
+                  - 'c 189:* rmw'
                 volumes:
                         - "/dev/bus/usb:/dev/bus/usb"
-                devices:
-                        - "/dev/brother-printer:/dev/brother-printer"
