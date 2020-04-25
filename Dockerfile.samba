@@ -8,7 +8,7 @@ VOLUME /samba
 RUN chmod 755 /samba 
 
 #update and install samba
-RUN apt-get update && apt-get install -y samba sysvinit-core graphicsmagick-imagemagick-compat 
+RUN apt-get update && apt-get install -y samba graphicsmagick-imagemagick-compat 
 
 #copy samba config and uploader cleaner to container
 COPY smb.conf /etc/samba/smb.conf
@@ -19,4 +19,4 @@ RUN chmod +x /upload_cleaner
 RUN echo "*/10 * * * * /upload_cleaner" >> /etc/cron.d/upload_cleaner
 run crontab  /etc/cron.d/upload_cleaner
 
-ENTRYPOINT ["/sbin/init"]
+ENTRYPOINT ["/usr/sbin/smbd", "-S" , "-F", "--no-process-group"]

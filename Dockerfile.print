@@ -4,7 +4,7 @@ EXPOSE 631
 
 WORKDIR /root
 
-RUN apt-get update && apt-get install -y cups whois sysvinit-core libcups2-dev libcupsimage2-dev git cmake
+RUN apt-get update && apt-get install -y cups whois libcups2-dev libcupsimage2-dev git cmake
 
 RUN git clone https://github.com/pdewacht/brlaser.git
 
@@ -21,4 +21,4 @@ RUN useradd \
   --password=$(mkpasswd print) \
   print
 
-CMD ["/sbin/init"]
+CMD ["/usr/sbin/cupsd","-f"]

@@ -8,9 +8,9 @@ VOLUME /samba
 RUN chmod 755 /samba 
 
 #update and install samba
-RUN apt-get update && apt-get install -y sysvinit-core minidlna
+RUN apt-get update && apt-get install -y  minidlna
 
 COPY minidlna.conf /etc/minidlna.conf
 
 
-ENTRYPOINT ["/sbin/init"]
+ENTRYPOINT ["/usr/sbin/minidlnad", "-d"]
