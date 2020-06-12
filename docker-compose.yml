@@ -7,21 +7,21 @@ services:
                 build:         
                         context: .
                         dockerfile: Dockerfile.samba
-                ports :
-                        - "139:139"
-                        - "445:445"
                 volumes:
-                        - "/mnt/samba:/samba"
-                container_name: samba_server
+                        - "/mnt/docker/samba:/samba"
+                networks:
+                    ipvlan:
+                container_name: samba
         dlna:
                 restart: always
                 build: 
                         context: .
                         dockerfile: Dockerfile.dlna
                 volumes:
-                        - "/mnt/samba:/samba"
-                container_name: dlna_server
-                network_mode: host
+                        - "/mnt/docker/samba:/samba"
+                networks:
+                    ipvlan:
+                container_name: dlna
         print:
                 restart: always
                 build: 
@@ -29,10 +29,47 @@ services:
                         dockerfile: Dockerfile.print
                 volumes:
                         - "/var/run/dbus:/var/run/dbus"
-                container_name: print_server
-                network_mode: host
+                container_name: cups
+                networks:
+                    ipvlan:
                 #rules allow access to shared usb devices 
                 device_cgroup_rules:
                   - 'c 189:* rmw'
                 volumes:
                         - "/dev/bus/usb:/dev/bus/usb"
+        pihole:
+            container_name: pihole
+            image: pihole/pihole:dev
+            environment:
+              TZ: 'Europe/London'
+              WEBPASSWORD: "password"
+            volumes:
+               - '/mnt/docker/pihole/etc-pihole/:/etc/pihole/'
+               - '/mnt/docker/pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/'
+            dns:
+              - 127.0.0.1
+              - 1.1.1.1
+            cap_add:
+              - NET_ADMIN
+            networks:
+                    ipvlan:
+                        ipv4_address: 192.168.0.254
+            restart: unless-stopped
+            
+networks:
+             ipvlan:
+               name: ipvlan
+               driver: ipvlan
+               driver_opts:
+                       parent: "wlan0"
+               ipam:
+                       config:
+                               - subnet: 192.168.0.0/24
+                                 gateway: 192.168.0.1
+                                 ip_range: 192.168.0.192/26
+                                 aux_addresses:
+                                         host: 192.168.0.190
+#ip link add docker-ipvlan link wlan0 type ipvlan
+#ip addr add 192.168.0.190/32 dev docker-ipvlan
+#ip link set docker-ipvlan up
+#ip route add 192.168.1.192/26 dev docker-ipvlan up
